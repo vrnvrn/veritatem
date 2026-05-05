@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to Think Clearly</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        :root {
+            --paper: #f6f1e8;
+            --paper-deep: #ede6d6;
+            --ink: #1d1812;
+            --ink-soft: #4a4338;
+            --ink-faint: #8a8170;
+            --rule: #c9bfa9;
+            --accent: #6b2222;
+            --accent-soft: #8a3a3a;
+            --gold: #a07a2c;
+        }
+
+        body {
+            font-family: 'EB Garamond', 'Cormorant Garamond', Georgia, serif;
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.55;
+            font-size: 19px;
+            font-feature-settings: "lnum", "kern", "liga";
+        }
+
+        /* Subtle paper grain */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background-image:
+                radial-gradient(circle at 20% 30%, rgba(160,122,44,0.025) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(107,34,34,0.02) 0%, transparent 40%);
+            z-index: 1;
+        }
+
+        /* Progress bar */
+        #progress-bar {
+            position: fixed;
+            top: 0; left: 0;
+            height: 2px;
+            background: var(--accent);
+            z-index: 1000;
+            transition: width 0.1s;
+            width: 0%;
+        }
+
+        /* Slides */
+        .slide {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem 2.5rem 4rem;
+            position: relative;
+            z-index: 2;
+            border-bottom: 1px solid var(--rule);
+        }
+
+        .slide:last-child { border-bottom: none; }
+
+        .slide-content {
+            max-width: 760px;
+            width: 100%;
+        }
+
+        .slide-dark {
+            background: #1a1510;
+            color: var(--paper);
+            border-bottom-color: #2a241c;
+        }
+
+        .slide-deep {
+            background: var(--paper-deep);
+        }
+
+        /* Page number / running header */
+        .folio {
+            position: absolute;
+            top: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'EB Garamond', serif;
+            font-size: 0.75rem;
+            font-style: italic;
+            color: var(--ink-faint);
+            letter-spacing: 0.1em;
+            font-variant: small-caps;
+        }
+
+        .slide-dark .folio { color: rgba(246,241,232,0.4); }
+
+        .folio-num {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'EB Garamond', serif;
+            font-size: 0.75rem;
+            font-style: italic;
+            color: var(--ink-faint);
+        }
+
+        .slide-dark .folio-num { color: rgba(246,241,232,0.35); }
+
+        /* Typography */
+        .label {
+            font-family: 'EB Garamond', serif;
+            font-size: 0.78rem;
+            font-weight: 500;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 1.2rem;
+            display: inline-block;
+            position: relative;
+        }
+
+        .label::after {
+            content: '';
+            display: block;
+            width: 2.2rem;
+            height: 1px;
+            background: var(--accent);
+            margin-top: 0.5rem;
+        }
+
+        .slide-dark .label { color: #c89090; }
+        .slide-dark .label::after { background: #c89090; }
+
+        h1.title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(3rem, 7vw, 5.5rem);
+            font-weight: 500;
+            line-height: 1;
+            letter-spacing: -0.01em;
+            margin-bottom: 1.5rem;
+        }
+
+        h2.heading {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.9rem, 3.6vw, 2.7rem);
+            font-weight: 500;
+            line-height: 1.15;
+            letter-spacing: -0.005em;
+            margin-bottom: 1.25rem;
+            color: var(--ink);
+        }
+
+        .slide-dark h2.heading { color: var(--paper); }
+
+        h3.sub {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+            color: var(--ink);
+        }
+
+        .slide-dark h3.sub { color: var(--paper); }
+
+        p.body {
+            font-size: 1.1rem;
+            line-height: 1.62;
+            color: var(--ink-soft);
+            margin-bottom: 1rem;
+            max-width: 640px;
+        }
+
+        .slide-dark p.body { color: rgba(246,241,232,0.78); }
+
+        p.body:last-child { margin-bottom: 0; }
+
+        .lead {
+            font-size: 1.35rem;
+            font-style: italic;
+            color: var(--ink);
+            line-height: 1.45;
+            margin-bottom: 1.25rem;
+            max-width: 640px;
+            font-family: 'EB Garamond', serif;
+        }
+
+        .slide-dark .lead { color: var(--paper); }
+
+        /* Drop cap */
+        .drop::first-letter {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 4.2rem;
+            font-weight: 600;
+            float: left;
+            line-height: 0.85;
+            margin: 0.3rem 0.6rem 0 0;
+            color: var(--accent);
+        }
+
+        /* Pull quote */
+        .pull {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.6rem, 3vw, 2.3rem);
+            font-weight: 400;
+            font-style: italic;
+            line-height: 1.35;
+            color: var(--ink);
+            border-left: 2px solid var(--accent);
+            padding: 0.4rem 0 0.4rem 1.5rem;
+            margin: 1rem 0;
+            max-width: 660px;
+        }
+
+        .slide-dark .pull { color: var(--paper); border-left-color: #c89090; }
+
+        .pull-attr {
+            font-family: 'EB Garamond', serif;
+            font-size: 0.95rem;
+            font-style: normal;
+            color: var(--ink-faint);
+            margin-top: 0.6rem;
+            letter-spacing: 0.05em;
+        }
+
+        .pull-attr {
+            display: block;
+        }
+
+        /* Ornamental divider */
+        .ornament {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 1.5rem 0;
+            color: var(--ink-faint);
+            font-size: 1.1rem;
+            letter-spacing: 0.6em;
+        }
+
+        .slide-dark .ornament { color: rgba(246,241,232,0.3); }
+
+        /* Part divider */
+        .part {
+            text-align: center;
+        }
+
+        .part-roman {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            font-style: italic;
+            color: var(--gold);
+            letter-spacing: 0.4em;
+            margin-bottom: 1rem;
+        }
+
+        .part-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.4rem, 5vw, 3.8rem);
+            font-weight: 500;
+            line-height: 1.1;
+            color: var(--paper);
+            margin-bottom: 1.2rem;
+        }
+
+        .part-sub {
+            font-family: 'EB Garamond', serif;
+            font-style: italic;
+            font-size: 1.15rem;
+            color: rgba(246,241,232,0.6);
+            max-width: 520px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        .part-rule {
+            width: 60px;
+            height: 1px;
+            background: var(--gold);
+            margin: 1.5rem auto;
+        }
+
+        /* Two-column layout */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 1.25rem;
+        }
+
+        .col-card {
+            border-top: 1px solid var(--rule);
+            padding-top: 1rem;
+        }
+
+        .slide-dark .col-card { border-top-color: rgba(246,241,232,0.2); }
+
+        .col-num {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.05rem;
+            font-style: italic;
+            color: var(--accent);
+            margin-bottom: 0.3rem;
+            letter-spacing: 0.05em;
+        }
+
+        .slide-dark .col-num { color: #c89090; }
+
+        .col-card h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.35rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--ink);
+        }
+
+        .slide-dark .col-card h3 { color: var(--paper); }
+
+        .col-card p {
+            font-size: 1rem;
+            line-height: 1.55;
+            color: var(--ink-soft);
+        }
+
+        .slide-dark .col-card p { color: rgba(246,241,232,0.75); }
+
+        /* Numbered list, academic style */
+        .num-list {
+            list-style: none;
+            counter-reset: item;
+            margin-top: 1rem;
+        }
+
+        .num-list li {
+            counter-increment: item;
+            padding: 0.7rem 0 0.7rem 2.6rem;
+            position: relative;
+            border-bottom: 1px dotted var(--rule);
+            font-size: 1.05rem;
+            line-height: 1.5;
+            color: var(--ink-soft);
+        }
+
+        .slide-dark .num-list li {
+            border-bottom-color: rgba(246,241,232,0.18);
+            color: rgba(246,241,232,0.78);
+        }
+
+        .num-list li:last-child { border-bottom: none; }
+
+        .num-list li::before {
+            content: counter(item, lower-roman) ".";
+            position: absolute;
+            left: 0;
+            top: 0.7rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 1.05rem;
+            color: var(--accent);
+            font-weight: 500;
+            width: 2.2rem;
+            text-align: right;
+        }
+
+        .slide-dark .num-list li::before { color: #c89090; }
+
+        .num-list li strong {
+            color: var(--ink);
+            font-weight: 600;
+            font-style: normal;
+            display: block;
+            margin-bottom: 0.15rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.15rem;
+        }
+
+        .slide-dark .num-list li strong { color: var(--paper); }
+
+        /* Margin note style */
+        .marginalia {
+            border-left: 1px solid var(--rule);
+            padding-left: 1.25rem;
+            font-style: italic;
+            font-size: 0.98rem;
+            color: var(--ink-faint);
+            margin: 1.25rem 0;
+            max-width: 560px;
+        }
+
+        .slide-dark .marginalia {
+            border-left-color: rgba(246,241,232,0.25);
+            color: rgba(246,241,232,0.55);
+        }
+
+        /* Inline reference */
+        .ref {
+            font-family: 'EB Garamond', serif;
+            font-style: italic;
+            color: var(--ink-faint);
+            font-size: 0.92rem;
+        }
+
+        /* Bias card grid */
+        .bias-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.25rem 2rem;
+            margin-top: 1.25rem;
+        }
+
+        .bias-item {
+            border-top: 1px solid var(--rule);
+            padding-top: 0.7rem;
+        }
+
+        .bias-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--ink);
+            margin-bottom: 0.25rem;
+        }
+
+        .bias-desc {
+            font-size: 0.96rem;
+            color: var(--ink-soft);
+            line-height: 1.5;
+        }
+
+        /* System 1 vs 2 panels */
+        .systems {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .sys-panel {
+            padding: 1.5rem;
+            border: 1px solid var(--rule);
+            background: rgba(255,255,255,0.3);
+            position: relative;
+        }
+
+        .sys-panel.s2 {
+            background: var(--ink);
+            color: var(--paper);
+            border-color: var(--ink);
+        }
+
+        .sys-roman {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 1.05rem;
+            color: var(--accent);
+            letter-spacing: 0.1em;
+        }
+
+        .sys-panel.s2 .sys-roman { color: var(--gold); }
+
+        .sys-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.55rem;
+            font-weight: 600;
+            margin: 0.2rem 0 0.6rem;
+        }
+
+        .sys-traits {
+            list-style: none;
+            font-size: 0.98rem;
+            line-height: 1.55;
+        }
+
+        .sys-traits li {
+            padding: 0.25rem 0;
+            color: var(--ink-soft);
+        }
+
+        .sys-panel.s2 .sys-traits li { color: rgba(246,241,232,0.78); }
+
+        .sys-traits li::before {
+            content: '·';
+            margin-right: 0.5rem;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .sys-panel.s2 .sys-traits li::before { color: var(--gold); }
+
+        /* Interactive demo: bias quiz */
+        .quiz {
+            margin-top: 1.25rem;
+            background: rgba(255,255,255,0.4);
+            border: 1px solid var(--rule);
+            padding: 1.25rem 1.5rem;
+        }
+
+        .quiz-q {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem;
+            font-style: italic;
+            margin-bottom: 1rem;
+            color: var(--ink);
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .quiz-btn {
+            background: var(--paper);
+            border: 1px solid var(--rule);
+            color: var(--ink);
+            padding: 0.7rem 1rem;
+            font-family: 'EB Garamond', serif;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.15s;
+            text-align: left;
+        }
+
+        .quiz-btn:hover {
+            border-color: var(--accent);
+            background: var(--paper-deep);
+        }
+
+        .quiz-btn.correct {
+            background: #2c4a2c;
+            color: var(--paper);
+            border-color: #2c4a2c;
+        }
+
+        .quiz-btn.wrong {
+            background: var(--accent);
+            color: var(--paper);
+            border-color: var(--accent);
+        }
+
+        .quiz-explain {
+            font-style: italic;
+            color: var(--ink-soft);
+            font-size: 0.98rem;
+            line-height: 1.5;
+            min-height: 1.5em;
+            margin-top: 0.5rem;
+        }
+
+        /* Probability scale interactive */
+        .prob-scale {
+            margin: 1.5rem 0 0.5rem;
+            position: relative;
+        }
+
+        .prob-track {
+            height: 6px;
+            background: linear-gradient(to right, var(--paper-deep), var(--accent));
+            border-radius: 3px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .prob-input {
+            width: 100%;
+            -webkit-appearance: none;
+            appearance: none;
+            background: transparent;
+            height: 32px;
+            margin: -13px 0;
+            cursor: pointer;
+        }
+
+        .prob-input::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--ink);
+            border: 3px solid var(--paper);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            cursor: pointer;
+        }
+
+        .prob-input::-moz-range-thumb {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--ink);
+            border: 3px solid var(--paper);
+            cursor: pointer;
+        }
+
+        .prob-labels {
+            display: flex;
+            justify-content: space-between;
+            font-style: italic;
+            font-size: 0.85rem;
+            color: var(--ink-faint);
+            margin-top: 0.5rem;
+        }
+
+        .prob-readout {
+            text-align: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.4rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-top: 0.5rem;
+            letter-spacing: 0.02em;
+        }
+
+        .prob-feedback {
+            text-align: center;
+            font-style: italic;
+            color: var(--ink-soft);
+            font-size: 1rem;
+            min-height: 1.5em;
+            margin-top: 0.4rem;
+        }
+
+        /* Scout vs Soldier toggle */
+        .stance-toggle {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border: 1px solid var(--rule);
+            margin-top: 1.5rem;
+        }
+
+        .stance-side {
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            opacity: 0.5;
+            text-align: center;
+        }
+
+        .stance-side.active {
+            opacity: 1;
+            background: var(--ink);
+            color: var(--paper);
+        }
+
+        .stance-side:not(.active):hover {
+            opacity: 0.85;
+            background: var(--paper-deep);
+        }
+
+        .stance-side .icon {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            font-style: italic;
+            margin-bottom: 0.4rem;
+            display: block;
+        }
+
+        .stance-side h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+        }
+
+        .stance-side p {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        /* Thought experiment card */
+        .te-card {
+            background: rgba(255,255,255,0.4);
+            border: 1px solid var(--rule);
+            padding: 1.3rem 1.5rem;
+            margin-top: 1rem;
+            position: relative;
+        }
+
+        .te-card::before {
+            content: '§';
+            position: absolute;
+            top: 0.75rem;
+            right: 1rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            font-style: italic;
+            color: var(--accent);
+        }
+
+        .te-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 1.05rem;
+            color: var(--accent);
+            letter-spacing: 0.05em;
+            margin-bottom: 0.3rem;
+        }
+
+        .te-prompt {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem;
+            font-weight: 500;
+            line-height: 1.4;
+            color: var(--ink);
+            margin-bottom: 0.5rem;
+        }
+
+        .te-purpose {
+            font-size: 0.95rem;
+            color: var(--ink-soft);
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        /* Mode tabs */
+        .mode-bar {
+            position: fixed;
+            top: 1rem;
+            right: 1.25rem;
+            z-index: 999;
+            display: flex;
+            gap: 0.4rem;
+            background: rgba(246,241,232,0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--rule);
+            padding: 0.3rem;
+            border-radius: 4px;
+            font-size: 0.78rem;
+        }
+
+        .mode-bar a {
+            padding: 0.3rem 0.7rem;
+            color: var(--ink-soft);
+            text-decoration: none;
+            font-family: 'EB Garamond', serif;
+            font-style: italic;
+            border-radius: 2px;
+            transition: all 0.15s;
+        }
+
+        .mode-bar a.current {
+            background: var(--ink);
+            color: var(--paper);
+        }
+
+        .mode-bar a:not(.current):hover {
+            background: var(--paper-deep);
+        }
+
+        /* Footer */
+        .colophon {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 998;
+            text-align: center;
+            padding: 0.5rem 1rem;
+            font-family: 'EB Garamond', serif;
+            font-size: 0.78rem;
+            font-style: italic;
+            background: rgba(246,241,232,0.85);
+            backdrop-filter: blur(8px);
+            border-top: 1px solid var(--rule);
+            color: var(--ink-faint);
+        }
+
+        /* Five-tests numbered grid */
+        .tests-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem 1.5rem;
+            margin-top: 1.25rem;
+        }
+
+        .test-item {
+            padding: 0.5rem 0;
+            border-top: 1px solid var(--rule);
+            padding-top: 0.7rem;
+        }
+
+        .test-num {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            color: var(--accent);
+            font-size: 0.95rem;
+            letter-spacing: 0.05em;
+        }
+
+        .test-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            font-size: 1.15rem;
+            color: var(--ink);
+            margin: 0.1rem 0 0.3rem;
+        }
+
+        .test-desc {
+            font-size: 0.94rem;
+            color: var(--ink-soft);
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        /* Citation block */
+        .cite {
+            font-family: 'EB Garamond', serif;
+            font-size: 0.95rem;
+            font-style: italic;
+            color: var(--ink-faint);
+            margin-top: 1.25rem;
+            border-top: 1px solid var(--rule);
+            padding-top: 0.75rem;
+        }
+
+        .slide-dark .cite {
+            color: rgba(246,241,232,0.5);
+            border-top-color: rgba(246,241,232,0.2);
+        }
+
+        /* Mobile */
+        @media (max-width: 720px) {
+            body { font-size: 17px; }
+            .slide { padding: 3rem 1.5rem; }
+            .two-col, .systems, .bias-grid, .tests-grid, .quiz-options {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .stance-toggle { grid-template-columns: 1fr; }
+            .mode-bar { top: 0.5rem; right: 0.5rem; }
+        }
+
+        /* Print-ish small detail */
+        ::selection {
+            background: var(--accent);
+            color: var(--paper);
+        }
+    </style>
+</head>
+<body>
+<div id="progress-bar"></div>
+
+<nav class="mode-bar">
+    <a href="https://github.com/vrnvrn/justlearnthings">You Can Just Learn Things</a>
+    <a href="#" class="current">How to Think Clearly</a>
+</nav>
+
+<!-- =============== TITLE =============== -->
+<section class="slide" id="t1">
+    <div class="slide-content" style="text-align:center;">
+        <div class="part-roman" style="color:var(--accent);">An Inquiry</div>
+        <h1 class="title">How to Think<br>Clearly</h1>
+        <div class="ornament">· · ·</div>
+        <p class="lead" style="font-style:italic; margin:0 auto;">Notes on the systems, traps, and habits of mind for those who would build a better commons together.</p>
+    </div>
+    <div class="folio-num">i</div>
+</section>
+
+<!-- =============== PREMISE =============== -->
+<section class="slide slide-deep" id="t2">
+    <div class="folio">Preface</div>
+    <div class="slide-content">
+        <div class="label">The Premise</div>
+        <h2 class="heading">A city is built twice. First in the minds of its founders, then in the world.</h2>
+        <p class="body drop">When a community gathers to design something new (new institutions, new norms, a new commons), the quality of what gets built is bounded by the quality of the thinking that produces it. Bad maps make bad cities. Self-deception scales. The earliest decisions ossify into the streets people will walk for decades. So we must take seriously the discipline of seeing things as they are.</p>
+        <div class="marginalia">These notes draw on Kahneman, Galef, Anna Riedl, and the broader rationalist tradition, with the assumption that the reader is among the builders.</div>
+    </div>
+    <div class="folio-num">ii</div>
+</section>
+
+<!-- =============== THINKING IS A SKILL =============== -->
+<section class="slide" id="t3">
+    <div class="folio">Preface</div>
+    <div class="slide-content">
+        <div class="label">First Principle</div>
+        <h2 class="heading">Thinking is a trainable skill.</h2>
+        <p class="body">Most people treat their reasoning the way they treat their handwriting: a thing they do, never quite examined, never deliberately practiced. Yet the operations of the mind are trainable. Calibration improves with feedback. Bias awareness compounds. The habit of asking <em>"how would I know if I were wrong?"</em> becomes second nature, given time.</p>
+        <p class="body">Three commitments shape what follows:</p>
+        <ol class="num-list">
+            <li><strong>Know your machinery.</strong> Understand the two systems by which the mind reasons, and where each fails.</li>
+            <li><strong>Build the habit.</strong> Learn the small rituals (thought experiments, calibration, steel-manning) that surface what you would otherwise miss.</li>
+            <li><strong>Keep your sovereignty.</strong> Stay the author of your own thinking, especially in tight-knit groups where memetic gravity is strong.</li>
+        </ol>
+    </div>
+    <div class="folio-num">iii</div>
+</section>
+
+<!-- =============== PART I DIVIDER =============== -->
+<section class="slide slide-dark part" id="p1">
+    <div class="slide-content">
+        <div class="part-roman">Part I</div>
+        <div class="part-rule"></div>
+        <div class="part-title">Two Modes of Mind</div>
+        <p class="part-sub">On the architecture of thought, and the lazy intelligence of the brain at rest.</p>
+    </div>
+    <div class="folio-num" style="color:rgba(246,241,232,0.4);">1</div>
+</section>
+
+<!-- =============== KAHNEMAN INTRO =============== -->
+<section class="slide" id="t-kahneman">
+    <div class="folio">Part I · Two Modes of Mind</div>
+    <div class="slide-content">
+        <div class="label">Kahneman</div>
+        <h2 class="heading">There are two systems running in your head.</h2>
+        <p class="body">Daniel Kahneman, drawing on decades of work with Amos Tversky, proposed a useful fiction: the mind has two modes of operation. They are not anatomical structures. They are a way of speaking about two kinds of cognition that share the same skull and rarely agree on who is in charge.</p>
+        <p class="pull">"System 1 operates automatically and quickly, with little or no effort, and no sense of voluntary control. System 2 allocates attention to the effortful mental activities that demand it."<span class="pull-attr">Daniel Kahneman, <em>Thinking, Fast and Slow</em></span></p>
+    </div>
+    <div class="folio-num">2</div>
+</section>
+
+<!-- =============== SYSTEM 1 VS 2 =============== -->
+<section class="slide slide-deep" id="t-systems">
+    <div class="folio">Part I · Two Modes of Mind</div>
+    <div class="slide-content">
+        <div class="label">The Two Systems</div>
+        <h2 class="heading">Fast and slow.</h2>
+        <div class="systems">
+            <div class="sys-panel">
+                <div class="sys-roman">System I</div>
+                <div class="sys-name">The Intuitive Mind</div>
+                <ul class="sys-traits">
+                    <li>Fast, automatic, effortless</li>
+                    <li>Recognizes faces, drives familiar roads</li>
+                    <li>Reads emotion in a voice</li>
+                    <li>Speaks in feelings and impressions</li>
+                    <li>Confident, even when wrong</li>
+                </ul>
+            </div>
+            <div class="sys-panel s2">
+                <div class="sys-roman">System II</div>
+                <div class="sys-name">The Deliberative Mind</div>
+                <ul class="sys-traits">
+                    <li>Slow, effortful, attentive</li>
+                    <li>Multiplies 17 × 24, parses contracts</li>
+                    <li>Holds counterfactuals in mind</li>
+                    <li>Speaks in propositions and probabilities</li>
+                    <li>Tires quickly, costs glucose</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="folio-num">3</div>
+</section>
+
+<!-- =============== SYSTEM 2 IS LAZY =============== -->
+<section class="slide" id="t-lazy">
+    <div class="folio">Part I · Two Modes of Mind</div>
+    <div class="slide-content">
+        <div class="label">The Inconvenient Truth</div>
+        <h2 class="heading">System 2 is lazy. It outsources almost everything.</h2>
+        <p class="body">The intuition arrives first. Fully formed, certain, narratively complete. By the time conscious reasoning shows up, its job has been quietly downgraded to <em>press secretary</em>, defending what System 1 already concluded.</p>
+        <p class="body">It is a metabolic compromise. Deliberation is expensive, and most of life does not warrant it. The cost is that we generate post-hoc rationalizations and call them reasoning. Clear thinking begins with the willingness to interrupt this default.</p>
+        <div class="marginalia">A useful question to ask in a heated discussion: <em>"Did I work that out, or did it arrive whole?"</em></div>
+    </div>
+    <div class="folio-num">4</div>
+</section>
+
+<!-- =============== COGNITIVE EASE =============== -->
+<section class="slide slide-deep" id="t-ease">
+    <div class="folio">Part I · Two Modes of Mind</div>
+    <div class="slide-content">
+        <div class="label">Cognitive Ease</div>
+        <h2 class="heading">We mistake fluency for truth.</h2>
+        <p class="body">Information that is easy to process (familiar, repeated, rhymed, well-typeset) feels more true. The brain takes ease as evidence. This is why slogans persuade, why repeated lies become beliefs, and why a clearly typeset claim is judged more credible than the same claim handwritten.</p>
+        <p class="body">In a young community, this matters: ideas that get repeated in casual conversation acquire the patina of consensus, regardless of their merit. The clear thinker learns to feel the pull of fluency and discount it.</p>
+        <div class="marginalia">"Familiarity is not easily distinguished from truth." <span class="ref">Kahneman</span></div>
+    </div>
+    <div class="folio-num">5</div>
+</section>
+
+<!-- =============== PART II DIVIDER =============== -->
+<section class="slide slide-dark part" id="p2">
+    <div class="slide-content">
+        <div class="part-roman">Part II</div>
+        <div class="part-rule"></div>
+        <div class="part-title">A Field Guide to Bias</div>
+        <p class="part-sub">The systematic errors of System 1, catalogued so they may be recognized when they occur in the wild, most of all in oneself.</p>
+    </div>
+    <div class="folio-num" style="color:rgba(246,241,232,0.4);">6</div>
+</section>
+
+<!-- =============== BIAS PRIMER 1 =============== -->
+<section class="slide" id="t-bias1">
+    <div class="folio">Part II · A Field Guide to Bias</div>
+    <div class="slide-content">
+        <div class="label">Six Common Biases</div>
+        <h2 class="heading">The mind's predictable distortions.</h2>
+        <div class="bias-grid">
+            <div class="bias-item">
+                <div class="bias-name">Confirmation Bias</div>
+                <div class="bias-desc">We seek and remember evidence that fits what we already believe, and quietly skip past the rest.</div>
+            </div>
+            <div class="bias-item">
+                <div class="bias-name">Availability Heuristic</div>
+                <div class="bias-desc">We judge how common something is by how easily examples come to mind. Vivid beats common.</div>
+            </div>
+            <div class="bias-item">
+                <div class="bias-name">Anchoring</div>
+                <div class="bias-desc">The first number heard sets the gravity well. Subsequent estimates orbit it, even when arbitrary.</div>
+            </div>
+            <div class="bias-item">
+                <div class="bias-name">Sunk Cost Fallacy</div>
+                <div class="bias-desc">We continue investing in a doomed plan because of what we have already spent. The past should not vote.</div>
+            </div>
+            <div class="bias-item">
+                <div class="bias-name">Halo Effect</div>
+                <div class="bias-desc">A single attractive trait, like charm or success in one domain, colours every judgment we make of a person.</div>
+            </div>
+            <div class="bias-item">
+                <div class="bias-name">Hindsight Bias</div>
+                <div class="bias-desc">After an event, we remember having predicted it. The past becomes legible in a way it never was in advance.</div>
+            </div>
+        </div>
+    </div>
+    <div class="folio-num">7</div>
+</section>
+
+<!-- =============== BIAS PRIMER 2: group / community biases =============== -->
+<section class="slide slide-deep" id="t-bias2">
+    <div class="folio">Part II · A Field Guide to Bias</div>
+    <div class="slide-content">
+        <div class="label">Biases of the Group</div>
+        <h2 class="heading">Where many minds gather, new errors emerge.</h2>
+        <div class="bias-grid">
+            <div class="bias-item">
+                <div class="bias-name">Social Proof</div>
+                <div class="bias-desc">If others believe it, we lean toward believing it too, independent of evidence. Useful in restaurants, dangerous in beliefs.</div>
+            </div>
+            <div class="bias-item">
+                <div class="bias-name">In-Group Favouritism</div>
+                <div class="bias-desc">Arguments from inside the tribe receive lenient treatment. Identical arguments from outside are scrutinized.</div>
+            </div>
+            <div class="bias-item">
+                <div class="bias-name">Status Quo Bias</div>
+                <div class="bias-desc">Whatever currently exists feels right. New proposals carry an unfair burden of proof.</div>
+            </div>
+            <div class="bias-item">
+                <div class="bias-name">Mimetic Desire</div>
+                <div class="bias-desc">We learn what to want by watching others want it. In tight communities, the desire-graph collapses fast.</div>
+            </div>
+            <div class="bias-item">
+                <div class="bias-name">Groupthink</div>
+                <div class="bias-desc">A cohesive group converges on a view because dissent feels disloyal, and silence is read as agreement.</div>
+            </div>
+            <div class="bias-item">
+                <div class="bias-name">Optimism Cascade</div>
+                <div class="bias-desc">Founders surrounded by other founders are unusually optimistic. The prior calibration of the room is already wrong.</div>
+            </div>
+        </div>
+    </div>
+    <div class="folio-num">8</div>
+</section>
+
+<!-- =============== INTERACTIVE: BIAS QUIZ =============== -->
+<section class="slide" id="t-bias-quiz">
+    <div class="folio">Part II · A Field Guide to Bias</div>
+    <div class="slide-content">
+        <div class="label">Try It</div>
+        <h2 class="heading">Which kills more people each year?</h2>
+        <p class="body">Trust your gut, then check. The gap between your first answer and the actual numbers is the availability heuristic at work.</p>
+        <div class="quiz">
+            <div class="quiz-q">"In a typical year, which causes more deaths worldwide?"</div>
+            <div class="quiz-options">
+                <button class="quiz-btn" onclick="quizAnswer(this, false, 'sharks')">Shark attacks</button>
+                <button class="quiz-btn" onclick="quizAnswer(this, true, 'cows')">Cows</button>
+            </div>
+            <div class="quiz-explain" id="quiz-explain">Shark attacks: about 5 to 10. Cow-related deaths: roughly 20 in the US alone. Sharks star in films; cows rarely do. The mind catalogues vividness much more readily than frequency.</div>
+        </div>
+    </div>
+    <div class="folio-num">9</div>
+</section>
+
+<!-- =============== PART III DIVIDER =============== -->
+<section class="slide slide-dark part" id="p3">
+    <div class="slide-content">
+        <div class="part-roman">Part III</div>
+        <div class="part-rule"></div>
+        <div class="part-title">Methods of Rationality</div>
+        <p class="part-sub">A handful of practices, neither ornate nor mystical, that reliably produce better thinking when applied as habits.</p>
+    </div>
+    <div class="folio-num" style="color:rgba(246,241,232,0.4);">10</div>
+</section>
+
+<!-- =============== BELIEFS AS PROBABILITIES =============== -->
+<section class="slide" id="t-prob">
+    <div class="folio">Part III · Methods of Rationality</div>
+    <div class="slide-content">
+        <div class="label">Method I</div>
+        <h2 class="heading">Hold beliefs as probabilities.</h2>
+        <p class="body">A clear thinker does not say "I believe X" as one might salute a flag. They say "I am 70% confident in X" and watch how that confidence moves as evidence arrives. This is the only honest grammar for an uncertain world.</p>
+        <p class="body">Try the slider. Where does your confidence sit on the claim below? Move it. Notice how strange it feels to commit to a number.</p>
+        <div class="quiz">
+            <div class="quiz-q">"This community will still exist, in some recognizable form, ten years from today."</div>
+            <div class="prob-scale">
+                <input type="range" min="0" max="100" value="50" class="prob-input" id="probSlider" oninput="updateProb(this.value)">
+            </div>
+            <div class="prob-labels"><span>impossible</span><span>uncertain</span><span>certain</span></div>
+            <div class="prob-readout" id="probReadout">50%</div>
+            <div class="prob-feedback" id="probFeedback">A coin flip. You have no information either way.</div>
+        </div>
+    </div>
+    <div class="folio-num">11</div>
+</section>
+
+<!-- =============== CALIBRATION =============== -->
+<section class="slide slide-deep" id="t-calib">
+    <div class="folio">Part III · Methods of Rationality</div>
+    <div class="slide-content">
+        <div class="label">Method II</div>
+        <h2 class="heading">Calibration is a trainable skill.</h2>
+        <p class="body">A well-calibrated forecaster, when they say "70% confident," is right about 70% of the time. Most people are not. We are systematically overconfident on things we feel sure of, and miscalibrated in characteristic ways.</p>
+        <p class="body">The fix is mundane. Make predictions. Write them down with probabilities. Months later, score yourself. Notice that your 90%s come true 65% of the time. Adjust.</p>
+        <p class="pull">"A bet is any decision in which you stand to gain or lose something of value, based on the outcome."<span class="pull-attr">Julia Galef</span></p>
+        <div class="marginalia">If you are unwilling to bet on it at the odds you claim to believe, you do not actually believe it at those odds.</div>
+    </div>
+    <div class="folio-num">12</div>
+</section>
+
+<!-- =============== STEELMANNING =============== -->
+<section class="slide" id="t-steel">
+    <div class="folio">Part III · Methods of Rationality</div>
+    <div class="slide-content">
+        <div class="label">Method III</div>
+        <h2 class="heading">Steelman before you strike.</h2>
+        <p class="body">A straw man is a weak version of the opposing argument that is easy to defeat. A <em>steel man</em> is the strongest version of it, sometimes stronger than what its proponents themselves articulate. Defeat that one, if you can.</p>
+        <p class="body">The discipline has two effects. First, it dramatically improves the quality of disagreement. Second, and this is the part most people miss, it occasionally reveals that the steelmanned argument is correct, and yours was not.</p>
+        <div class="te-card">
+            <div class="te-name">Practice</div>
+            <div class="te-prompt">"What is the strongest case for the position I disagree with most? Could a thoughtful, well-informed person hold it?"</div>
+            <div class="te-purpose">If you cannot construct such a case, you do not yet understand the disagreement. Suspend conclusion until you can.</div>
+        </div>
+    </div>
+    <div class="folio-num">13</div>
+</section>
+
+<!-- =============== PRE-MORTEM =============== -->
+<section class="slide slide-deep" id="t-premortem">
+    <div class="folio">Part III · Methods of Rationality</div>
+    <div class="slide-content">
+        <div class="label">Method IV</div>
+        <h2 class="heading">Conduct the pre-mortem.</h2>
+        <p class="body">Before the project begins, gather the team and assume the project has already failed catastrophically. Treat the failure as completed fact. Now write the autopsy. Why did it fail? What did we miss? Who saw it coming and was not heard?</p>
+        <p class="body">This small reframing of failure as completed fact bypasses the optimism that surrounds every founding moment. It loosens the tongue of the cautious member who would otherwise stay polite.</p>
+        <div class="marginalia">A good pre-mortem produces at least one objection that genuinely surprises the founders. If everyone reaches the same comfortable failure modes, the exercise has not bitten.</div>
+    </div>
+    <div class="folio-num">14</div>
+</section>
+
+<!-- =============== BAYESIAN UPDATING =============== -->
+<section class="slide" id="t-bayes">
+    <div class="folio">Part III · Methods of Rationality</div>
+    <div class="slide-content">
+        <div class="label">Method V</div>
+        <h2 class="heading">Update by degrees.</h2>
+        <p class="body">When new evidence arrives, the right question is <em>"how should this nudge my probability?"</em> Strong evidence moves the needle a lot. Weak evidence moves it a little. No evidence moves it not at all.</p>
+        <p class="body">Most disagreements that look like contradictions are actually just different priors confronting the same data. Two reasonable people, starting from different places, can update toward different conclusions and both be doing it correctly.</p>
+        <p class="pull">"If you are not changing your mind, you are doing something wrong."<span class="pull-attr">Julia Galef</span></p>
+    </div>
+    <div class="folio-num">15</div>
+</section>
+
+<!-- =============== PART IV DIVIDER (SCOUT) =============== -->
+<section class="slide slide-dark part" id="p4">
+    <div class="slide-content">
+        <div class="part-roman">Part IV</div>
+        <div class="part-rule"></div>
+        <div class="part-title">The Scout Mindset</div>
+        <p class="part-sub">A précis of Julia Galef's <em>The Scout Mindset</em> (Penguin, 2021), with attribution and respect.</p>
+    </div>
+    <div class="folio-num" style="color:rgba(246,241,232,0.4);">16</div>
+</section>
+
+<!-- =============== SCOUT VS SOLDIER =============== -->
+<section class="slide" id="t-scout1">
+    <div class="folio">Part IV · The Scout Mindset</div>
+    <div class="slide-content">
+        <div class="label">Galef's Distinction</div>
+        <h2 class="heading">Two postures toward your own beliefs.</h2>
+        <p class="body">Galef's central image: there are two stances one can take toward a question. The <em>soldier</em> defends a position; the <em>scout</em> draws a map. The soldier asks "<em>can</em> I believe this?" or "<em>must</em> I believe this?" The scout asks "<em>is</em> this true?"</p>
+        <div class="stance-toggle" id="stanceToggle">
+            <div class="stance-side" onclick="setStance('soldier')" id="stanceSoldier">
+                <span class="icon">⚔</span>
+                <h3>The Soldier</h3>
+                <p>Defends. Attacks. Concedes ground. Treats reasoning as combat in service of a side already chosen.</p>
+            </div>
+            <div class="stance-side active" onclick="setStance('scout')" id="stanceScout">
+                <span class="icon">⚑</span>
+                <h3>The Scout</h3>
+                <p>Surveys the terrain. Maps it accurately. Reports back, even when the news is unwelcome.</p>
+            </div>
+        </div>
+        <div class="cite">Julia Galef, <em>The Scout Mindset: Why Some People See Things Clearly and Others Don't</em> (2021). Outline by Rob Bensinger, LessWrong.</div>
+    </div>
+    <div class="folio-num">17</div>
+</section>
+
+<!-- =============== WHY WE DEFAULT TO SOLDIER =============== -->
+<section class="slide slide-deep" id="t-scout2">
+    <div class="folio">Part IV · The Scout Mindset</div>
+    <div class="slide-content">
+        <div class="label">Galef · Chapter 2</div>
+        <h2 class="heading">Why the soldier is the default.</h2>
+        <p class="body">Soldier mindset is protection. It guards things that genuinely matter to us. Galef organizes the protections into two halves:</p>
+        <div class="two-col">
+            <div class="col-card">
+                <div class="col-num">Three Emotional</div>
+                <h3>For the self</h3>
+                <p><strong>Comfort.</strong> Avoid unpleasant feelings.<br><strong>Self-esteem.</strong> Feel good about who you are.<br><strong>Morale.</strong> Stay motivated for hard things.</p>
+            </div>
+            <div class="col-card">
+                <div class="col-num">Three Social</div>
+                <h3>For the group</h3>
+                <p><strong>Persuasion.</strong> Convince yourself to convince others.<br><strong>Image.</strong> Believe what makes you look good.<br><strong>Belonging.</strong> Hold the views your tribe holds.</p>
+            </div>
+        </div>
+        <div class="marginalia">Soldier mindset is rational, locally. It often serves you. The trouble is that we deploy it constantly, even when it does not.</div>
+    </div>
+    <div class="folio-num">18</div>
+</section>
+
+<!-- =============== SIGNS OF A SCOUT =============== -->
+<section class="slide" id="t-scout3">
+    <div class="folio">Part IV · The Scout Mindset</div>
+    <div class="slide-content">
+        <div class="label">Galef · Chapter 4</div>
+        <h2 class="heading">The signs of a scout are behavioural.</h2>
+        <p class="body">Almost everyone, asked, will report being open-minded. Galef's test is sharper: do not ask what someone believes about themselves. Ask what they have <em>done</em>.</p>
+        <ol class="num-list">
+            <li><strong>Do you tell people when you realize they were right?</strong> At the moment, plainly, without delay or face-saving qualifiers.</li>
+            <li><strong>How do you receive criticism?</strong> Can you point to feedback you acted on? To a critic you promoted?</li>
+            <li><strong>Do you ever prove yourself wrong?</strong> Have you, in the last month, sought evidence against a view you hold?</li>
+            <li><strong>Do you have good critics?</strong> Can you name people who disagree with you whom you nonetheless respect?</li>
+            <li><strong>Can you name times you were in soldier mindset?</strong> If you cannot, you are still in it.</li>
+        </ol>
+    </div>
+    <div class="folio-num">19</div>
+</section>
+
+<!-- =============== FIVE THOUGHT EXPERIMENTS =============== -->
+<section class="slide slide-deep" id="t-scout4">
+    <div class="folio">Part IV · The Scout Mindset</div>
+    <div class="slide-content">
+        <div class="label">Galef · Chapter 5</div>
+        <h2 class="heading">Five thought experiments to catch yourself.</h2>
+        <p class="body">Galef's central tool. You cannot detect motivated reasoning by inspecting your conclusion. It will look reasonable from the inside. You must compare your reasoning to the counterfactual world in which your motivations were different.</p>
+        <div class="tests-grid">
+            <div class="test-item">
+                <div class="test-num">i.</div>
+                <div class="test-name">The Double Standard</div>
+                <div class="test-desc">Am I judging this person by a standard I would not apply to one I liked?</div>
+            </div>
+            <div class="test-item">
+                <div class="test-num">ii.</div>
+                <div class="test-name">The Outsider</div>
+                <div class="test-desc">If I had just stepped into this situation today, with no history, what would I do?</div>
+            </div>
+            <div class="test-item">
+                <div class="test-num">iii.</div>
+                <div class="test-name">The Conformity</div>
+                <div class="test-desc">If no one I respected held this view, would I still hold it?</div>
+            </div>
+            <div class="test-item">
+                <div class="test-num">iv.</div>
+                <div class="test-name">The Selective Skeptic</div>
+                <div class="test-desc">If this evidence supported the other side, how credible would I find it?</div>
+            </div>
+            <div class="test-item">
+                <div class="test-num">v.</div>
+                <div class="test-name">The Status Quo</div>
+                <div class="test-desc">If my current arrangement weren't the default, would I actively choose it?</div>
+            </div>
+        </div>
+    </div>
+    <div class="folio-num">20</div>
+</section>
+
+<!-- =============== HOW SURE ARE YOU =============== -->
+<section class="slide" id="t-scout5">
+    <div class="folio">Part IV · The Scout Mindset</div>
+    <div class="slide-content">
+        <div class="label">Galef · Chapter 6</div>
+        <h2 class="heading">How sure are you, really?</h2>
+        <p class="body">Galef borrows an analogy from the evolutionary psychologist Robert Kurzban. Inside every person there is a board of directors, which makes the actual decisions, and a press secretary, which makes the public statements. <em>The press secretary makes claims. The board makes bets.</em></p>
+        <p class="body">When you say "I'm sure of it," you are speaking as press secretary. Ask the board: would you stake $100 on this? $10,000? At what odds? The bet reveals what you actually believe.</p>
+        <p class="pull">"The core skill is being able to tell the difference between the feeling of making a claim and the feeling of actually trying to guess what's true."<span class="pull-attr">Julia Galef</span></p>
+    </div>
+    <div class="folio-num">21</div>
+</section>
+
+<!-- =============== LEAN INTO CONFUSION =============== -->
+<section class="slide slide-deep" id="t-scout6">
+    <div class="folio">Part IV · The Scout Mindset</div>
+    <div class="slide-content">
+        <div class="label">Galef · Chapter 11</div>
+        <h2 class="heading">Lean into confusion.</h2>
+        <p class="body">When an observation conflicts with your model, the soldier explains it away. The scout writes it down. Anomalies, accumulated, are how paradigms shift, but only if you stop dismissing them.</p>
+        <p class="body">Galef's recommendation is uncomfortable: be willing to <em>stay confused</em>. Resist the urge to resolve a puzzle prematurely. Keep a list of things that don't quite fit your worldview. Some will turn out to be noise. Some will turn out to be the most important data you possessed.</p>
+        <div class="marginalia">"All too often, we assume the only two possibilities are 'I'm right' or 'The other guy is right.' But there is often a hidden option C."</div>
+    </div>
+    <div class="folio-num">22</div>
+</section>
+
+<!-- =============== HOLD IDENTITY LIGHTLY =============== -->
+<section class="slide" id="t-scout7">
+    <div class="folio">Part IV · The Scout Mindset</div>
+    <div class="slide-content">
+        <div class="label">Galef · Chapters 13–14</div>
+        <h2 class="heading">Hold your identity lightly.</h2>
+        <p class="body">A belief becomes an identity when criticism of it feels like an attack on you. Identities make some thoughts much harder to think. They make some updates impossible. They are the deepest layer of soldier mindset, and the hardest to notice because they no longer feel like beliefs at all. They feel like who you are.</p>
+        <p class="body">The remedy is to hold your identity <em>lightly</em>. As description. As current best guess. As a working position you would update if the evidence asked you to.</p>
+        <div class="te-card">
+            <div class="te-name">Diagnostic</div>
+            <div class="te-prompt">Could you pass an ideological Turing test for the position you most disagree with?</div>
+            <div class="te-purpose">Could you write its strongest case so well that an actual believer could not tell you from one of their own? If not, you do not yet understand it. Until then, your disagreement is unearned.</div>
+        </div>
+    </div>
+    <div class="folio-num">23</div>
+</section>
+
+<!-- =============== PART V DIVIDER: Builders =============== -->
+<section class="slide slide-dark part" id="p5">
+    <div class="slide-content">
+        <div class="part-roman">Part V</div>
+        <div class="part-rule"></div>
+        <div class="part-title">Thought Experiments<br>for Builders</div>
+        <p class="part-sub">Specific exercises for those engaged in the design of new institutions, communities, and the early architecture of a city in formation.</p>
+    </div>
+    <div class="folio-num" style="color:rgba(246,241,232,0.4);">24</div>
+</section>
+
+<!-- =============== VEIL OF IGNORANCE =============== -->
+<section class="slide" id="t-veil">
+    <div class="folio">Part V · For Builders</div>
+    <div class="slide-content">
+        <div class="label">Rawls' Test</div>
+        <h2 class="heading">Design from behind the veil.</h2>
+        <p class="body">Imagine you must design the rules of this place (its membership policies, its governance, its norms around conflict) without yet knowing who you will be inside it. You may turn out to be the founder, the newcomer, the long-tenured resident, the dissenter, the child, the elder. You will not know your role until after the rules are set.</p>
+        <p class="body">Now design.</p>
+        <div class="te-card">
+            <div class="te-name">Apply It</div>
+            <div class="te-prompt">"Would I sign off on this rule if I did not yet know which side of it I would land on?"</div>
+            <div class="te-purpose">Cuts through the natural tendency of any founding group to design institutions that flatter the founders' own position.</div>
+        </div>
+    </div>
+    <div class="folio-num">25</div>
+</section>
+
+<!-- =============== PRE-MORTEM FOR THE CITY =============== -->
+<section class="slide slide-deep" id="t-cityfail">
+    <div class="folio">Part V · For Builders</div>
+    <div class="slide-content">
+        <div class="label">The Civic Pre-Mortem</div>
+        <h2 class="heading">It is five years from now. The project has failed.</h2>
+        <p class="body">The community we are building has dissolved, fractured, or quietly become irrelevant. The most thoughtful early members have drifted away. A retrospective is being written. What does it say?</p>
+        <ol class="num-list">
+            <li><strong>The founder's circle never let go.</strong> Decisions remained legibly the property of three or four people; everyone else became spectator.</li>
+            <li><strong>Dissent was filtered.</strong> Polite disagreement was tolerated. Structural critique was discouraged, and the structural critics left first.</li>
+            <li><strong>The vibes calcified.</strong> An aesthetic became a litmus test. New people self-selected to match. Cognitive diversity collapsed.</li>
+            <li><strong>We confused enthusiasm for evidence.</strong> The bar for new initiatives became charisma. Energy ran out faster than judgment improved.</li>
+        </ol>
+        <div class="marginalia">Useful only if it produces objections you have not yet heard the founders say out loud.</div>
+    </div>
+    <div class="folio-num">26</div>
+</section>
+
+<!-- =============== NEWCOMER TEST =============== -->
+<section class="slide" id="t-newcomer">
+    <div class="folio">Part V · For Builders</div>
+    <div class="slide-content">
+        <div class="label">The Newcomer Test</div>
+        <h2 class="heading">Would a newcomer recognize what we say we are?</h2>
+        <p class="body">A community has two descriptions: the one in its founding documents, and the one a thoughtful newcomer would write after a week of attendance. The first describes aspirations. The second describes practices. The gap between them is the most interesting thing about the community.</p>
+        <p class="body">The discipline is to keep the gap small, and to know which document is more accurate when they disagree.</p>
+        <div class="te-card">
+            <div class="te-name">Practice</div>
+            <div class="te-prompt">"If a stranger spent ten days here and wrote an honest field report, what would surprise me about it?"</div>
+            <div class="te-purpose">If nothing would surprise you, either you are unusually self-aware or, more likely, you have stopped seeing the place clearly.</div>
+        </div>
+    </div>
+    <div class="folio-num">27</div>
+</section>
+
+<!-- =============== REVERSE TEST: WOULD YOU OPT IN? =============== -->
+<section class="slide slide-deep" id="t-reverse">
+    <div class="folio">Part V · For Builders</div>
+    <div class="slide-content">
+        <div class="label">The Reverse Test</div>
+        <h2 class="heading">If you weren't already here, would you choose to come?</h2>
+        <p class="body">Every member of an established community quietly accumulates reasons not to leave: friendships, sunk effort, pride. These reasons are real. They are also not the same as reasons to <em>join</em>. Confusing one for the other is how communities calcify long after their best version has departed.</p>
+        <p class="body">Once a year, perform the reverse test on yourself. Imagine you are an outsider with full information about who is here, what they are building, and how it has gone. Would you, today, choose to come?</p>
+        <p class="pull">"If your current arrangement weren't the status quo, would you actively choose it?"<span class="pull-attr">Galef, the Status Quo Bias Test</span></p>
+    </div>
+    <div class="folio-num">28</div>
+</section>
+
+<!-- =============== PART VI DIVIDER: COGNITIVE SOVEREIGNTY =============== -->
+<section class="slide slide-dark part" id="p6">
+    <div class="slide-content">
+        <div class="part-roman">Part VI</div>
+        <div class="part-rule"></div>
+        <div class="part-title">Cognitive Sovereignty</div>
+        <p class="part-sub">An introduction, drawing on the work of Anna Riedl, to the idea that one's capacity to think is itself a thing to be tended, defended, and chosen deliberately.</p>
+    </div>
+    <div class="folio-num" style="color:rgba(246,241,232,0.4);">29</div>
+</section>
+
+<!-- =============== WHAT IS COGNITIVE SOVEREIGNTY =============== -->
+<section class="slide" id="t-sov1">
+    <div class="folio">Part VI · Cognitive Sovereignty</div>
+    <div class="slide-content">
+        <div class="label">Riedl · The Concept</div>
+        <h2 class="heading">The right and the practice of authoring your own thought.</h2>
+        <p class="body">Cognitive sovereignty, in Anna Riedl's formulation, is the capacity to remain the author of one's own thinking under the gravitational pull of social proof, algorithmic curation, and the deep pleasures of belonging. It is the precondition for being a useful member of any community.</p>
+        <p class="body">A sovereign mind contributes more to a collective. The dependent mind only echoes. Distinguishing the two requires effort.</p>
+        <p class="pull">A community of dependent minds reaches consensus quickly and is wrong slowly. A community of sovereign minds reaches consensus slowly and is wrong less often.</p>
+        <div class="cite">Drawing on the introductory work of Anna Riedl on cognitive sovereignty.</div>
+    </div>
+    <div class="folio-num">30</div>
+</section>
+
+<!-- =============== INFORMATION DIET =============== -->
+<section class="slide slide-deep" id="t-sov2">
+    <div class="folio">Part VI · Cognitive Sovereignty</div>
+    <div class="slide-content">
+        <div class="label">Riedl · The Information Diet</div>
+        <h2 class="heading">Your inputs are not neutral.</h2>
+        <p class="body">The mind is shaped by what it consumes, in proportions that surprise people who imagine themselves immune. The feeds you scroll, the conversations you walk past, the small frictions and rewards built into your tools. All of them are training you, whether you know it or not.</p>
+        <p class="body">Sovereignty begins with deliberateness about inputs. The discipline is to give a clear answer to the question, <em>"why is this thing in front of me right now, and is it serving the mind I want to have?"</em></p>
+        <ol class="num-list">
+            <li><strong>Audit weekly.</strong> What did you read, watch, and overhear? What of it would you choose again?</li>
+            <li><strong>Curate, don't consume.</strong> Subscribe to people. Choose your sources by hand.</li>
+            <li><strong>Leave room for silence.</strong> Original thought rarely arrives during scrolling.</li>
+        </ol>
+    </div>
+    <div class="folio-num">31</div>
+</section>
+
+<!-- =============== MIMETIC GRAVITY =============== -->
+<section class="slide" id="t-sov3">
+    <div class="folio">Part VI · Cognitive Sovereignty</div>
+    <div class="slide-content">
+        <div class="label">Riedl · The Group</div>
+        <h2 class="heading">Tight communities have strong gravity.</h2>
+        <p class="body">In a high-bandwidth, high-trust group, beliefs spread the way dialect spreads, by exposure, repetition, and the soft pleasure of fitting in. This is mostly fine. It is also how communities of clever people sometimes converge on conclusions no individual member would have reached alone.</p>
+        <p class="body">Contrarianism is no escape. Defining oneself against the group is still letting the group do the defining. The discipline is the practice of <em>thinking through</em>: deriving views from premises you have actually examined, holding them at the confidence the evidence warrants, and being willing to disagree without making a performance of it.</p>
+        <div class="marginalia">A useful question, asked privately and often: <em>"Would I still believe this if I were not surrounded by people who believe it?"</em></div>
+    </div>
+    <div class="folio-num">32</div>
+</section>
+
+<!-- =============== FIRST PRINCIPLES =============== -->
+<section class="slide slide-deep" id="t-sov4">
+    <div class="folio">Part VI · Cognitive Sovereignty</div>
+    <div class="slide-content">
+        <div class="label">Riedl · The Practice</div>
+        <h2 class="heading">Build your views from the ground up, at least once.</h2>
+        <p class="body">Take a belief that matters to you. Trace it back. Why do you hold it? Because you read it, because someone you respect holds it, because everyone around you holds it, or because you have actually worked through the argument and the evidence?</p>
+        <p class="body">You will not have time to do this for every belief. You should not. But for the small set of beliefs on which your most important decisions ride, doing it once is the difference between a sovereign mind and a borrowed one.</p>
+        <p class="pull">"Hold few opinions, and hold those few from your own thinking."<span class="pull-attr">A working paraphrase</span></p>
+    </div>
+    <div class="folio-num">33</div>
+</section>
+
+<!-- =============== CLOSING =============== -->
+<section class="slide" id="t-close1">
+    <div class="folio">Coda</div>
+    <div class="slide-content">
+        <div class="label">In Summary</div>
+        <h2 class="heading">Clear thinking is a habit, and habits compound.</h2>
+        <p class="body">No one becomes a clear thinker by reading a deck. The transformations described here are slow, granular, and unglamorous. A small calibration exercise once a week. A pre-mortem before the next decision. The willingness, once a month, to ask whether you would still hold this view if no one around you did.</p>
+        <p class="body">The reward, accumulated over years, is the rarest thing in any community: a person whose word carries weight because it has been earned. A friend whose disagreement is welcome because it is honest. A mind worth the company of other minds.</p>
+        <div class="ornament">· · ·</div>
+    </div>
+    <div class="folio-num">34</div>
+</section>
+
+<!-- =============== FINAL =============== -->
+<section class="slide slide-dark" id="t-fin">
+    <div class="slide-content" style="text-align:center;">
+        <div class="part-roman" style="color:var(--gold);">Finis</div>
+        <div class="part-rule"></div>
+        <h1 class="title" style="font-size:clamp(2.4rem,5vw,4rem);">See clearly.<br>Build well.</h1>
+        <div class="ornament" style="color:rgba(246,241,232,0.35);">· · ·</div>
+        <p class="part-sub" style="margin-top:1rem;">Credit to Daniel Kahneman, Julia Galef, Anna Riedl, Rob Bensinger's outline on LessWrong, and the broader rationalist tradition. Written for those building something together.</p>
+    </div>
+    <div class="folio-num" style="color:rgba(246,241,232,0.4);">35</div>
+</section>
+
+<footer class="colophon">
+    Veritatem Quaeramus cum Veronica · vrn.eth · May 2026
+</footer>
+
+<script>
+    // ---- Progress bar ----
+    window.addEventListener('scroll', () => {
+        const top = window.scrollY;
+        const h = document.documentElement.scrollHeight - window.innerHeight;
+        const pct = h > 0 ? (top / h) * 100 : 0;
+        document.getElementById('progress-bar').style.width = pct + '%';
+    });
+
+    // ---- Arrow key navigation ----
+    (function() {
+        function slides() { return Array.from(document.querySelectorAll('section.slide')); }
+        function currentIndex(s) {
+            const mid = window.scrollY + window.innerHeight / 2;
+            let best = 0, bestDist = Infinity;
+            s.forEach((el, i) => {
+                const r = el.getBoundingClientRect();
+                const m = window.scrollY + r.top + r.height / 2;
+                const d = Math.abs(m - mid);
+                if (d < bestDist) { bestDist = d; best = i; }
+            });
+            return best;
+        }
+        function go(s, i) {
+            i = Math.max(0, Math.min(s.length - 1, i));
+            s[i].scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        document.addEventListener('keydown', e => {
+            const tag = document.activeElement?.tagName;
+            if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+            const s = slides();
+            if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === 'PageDown') {
+                e.preventDefault();
+                go(s, currentIndex(s) + 1);
+            } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft' || e.key === 'PageUp') {
+                e.preventDefault();
+                go(s, currentIndex(s) - 1);
+            }
+        });
+    })();
+
+    // ---- Bias quiz ----
+    function quizAnswer(btn, isCorrect, key) {
+        const buttons = btn.parentElement.querySelectorAll('.quiz-btn');
+        buttons.forEach(b => b.disabled = true);
+        btn.classList.add(isCorrect ? 'correct' : 'wrong');
+        const explain = document.getElementById('quiz-explain');
+        if (key === 'cows') {
+            explain.textContent = 'Correct. Cows kill roughly 20 people per year in the United States alone, against perhaps 5–10 worldwide for sharks. The shark feels more dangerous because the shark is more vivid. Frequency and salience are different things.';
+        } else {
+            explain.textContent = 'A natural intuition, and the wrong one. Sharks kill 5 to 10 people worldwide; cows roughly 20 in the US alone. Vividness drives the felt risk far more than frequency does. This is the availability heuristic in plain sight.';
+        }
+    }
+
+    // ---- Probability slider ----
+    function updateProb(v) {
+        v = parseInt(v);
+        document.getElementById('probReadout').textContent = v + '%';
+        const fb = document.getElementById('probFeedback');
+        if (v === 0) fb.textContent = 'Impossible. You are certain it will not happen.';
+        else if (v < 15) fb.textContent = 'Very unlikely. You would be surprised if it occurred.';
+        else if (v < 35) fb.textContent = 'Unlikely. You lean against, but not strongly.';
+        else if (v < 50) fb.textContent = 'Slightly against. Real uncertainty, with a tilt.';
+        else if (v === 50) fb.textContent = 'A coin flip. You have no information either way.';
+        else if (v < 65) fb.textContent = 'Slightly toward. Real uncertainty, with a tilt.';
+        else if (v < 85) fb.textContent = 'Likely. You expect it, but would not be shocked otherwise.';
+        else if (v < 100) fb.textContent = 'Very likely. Surprise would require a real explanation.';
+        else fb.textContent = 'Certain. Be cautious; true certainty is rare.';
+    }
+
+    // ---- Stance toggle ----
+    function setStance(s) {
+        const sol = document.getElementById('stanceSoldier');
+        const sco = document.getElementById('stanceScout');
+        if (s === 'soldier') {
+            sol.classList.add('active');
+            sco.classList.remove('active');
+        } else {
+            sco.classList.add('active');
+            sol.classList.remove('active');
+        }
+    }
+</script>
+</body>
+</html>
