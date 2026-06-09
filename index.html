@@ -721,41 +721,6 @@
             line-height: 1.5;
         }
 
-        /* Mode tabs */
-        .mode-bar {
-            position: fixed;
-            top: 1rem;
-            right: 1.25rem;
-            z-index: 999;
-            display: flex;
-            gap: 0.4rem;
-            background: rgba(246,241,232,0.85);
-            backdrop-filter: blur(8px);
-            border: 1px solid var(--rule);
-            padding: 0.3rem;
-            border-radius: 4px;
-            font-size: 0.78rem;
-        }
-
-        .mode-bar a {
-            padding: 0.3rem 0.7rem;
-            color: var(--ink-soft);
-            text-decoration: none;
-            font-family: 'EB Garamond', serif;
-            font-style: italic;
-            border-radius: 2px;
-            transition: all 0.15s;
-        }
-
-        .mode-bar a.current {
-            background: var(--ink);
-            color: var(--paper);
-        }
-
-        .mode-bar a:not(.current):hover {
-            background: var(--paper-deep);
-        }
-
         /* Footer */
         .colophon {
             position: fixed;
@@ -836,7 +801,6 @@
                 gap: 1rem;
             }
             .stance-toggle { grid-template-columns: 1fr; }
-            .mode-bar { top: 0.5rem; right: 0.5rem; }
         }
 
         /* Print-ish small detail */
@@ -848,11 +812,6 @@
 </head>
 <body>
 <div id="progress-bar"></div>
-
-<nav class="mode-bar">
-    <a href="https://justlearnthings.vercel.app">You Can Just Learn Things</a>
-    <a href="#" class="current">How to Think Clearly</a>
-</nav>
 
 <!-- =============== TITLE =============== -->
 <section class="slide" id="t1">
